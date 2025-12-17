@@ -1,0 +1,53 @@
+# Tomcat Helm Chart Values
+# For use with Bitnami Tomcat chart
+
+## @param replicaCount Number of Tomcat replicas
+replicaCount: 1
+
+## Tomcat image configuration
+image:
+  registry: docker.io
+  repository: bitnami/tomcat
+  tag: "10.1.28-debian-12-r3"
+  pullPolicy: IfNotPresent
+
+## Tomcat configuration
+tomcatUsername: admin
+tomcatPassword: ""
+tomcatAllowRemoteManagement: 1
+
+## Service configuration
+service:
+  type: ClusterIP
+  port: 80
+
+## Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+## Persistence configuration
+persistence:
+  enabled: false
+  size: 1Gi
+
+## Liveness and readiness probes
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
