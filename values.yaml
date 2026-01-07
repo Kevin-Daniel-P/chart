@@ -1,53 +1,88 @@
-# Tomcat Helm Chart Values
-# For use with Bitnami Tomcat chart
+## Global settings
+global:
+  redis:
+    password: "redis-password"
 
-## @param replicaCount Number of Tomcat replicas
-replicaCount: 1
-
-## Tomcat image configuration
+## Image configuration
 image:
   registry: docker.io
-  repository: bitnami/tomcat
-  tag: "10.1.28-debian-12-r3"
+  repository: bitnami/redis
+  tag: 7.2.4
   pullPolicy: IfNotPresent
 
-## Tomcat configuration
-tomcatUsername: admin
-tomcatPassword: ""
-tomcatAllowRemoteManagement: 1
+## Architecture: standalone or replication
+architecture: standalone
+# architecture: replication
+
+## Authentication
+auth:
+  enabled: true
+  password: "redis-password"
+  # existingSecret: redis-secret
+  # existingSecretPasswordKey: redis-password
+
+## Redis common configuration
+commonConfiguration: |-
+  maxmemory 256mb
+  maxmemory-policy allkeys-lru
+  appendonly yes
+  save 900 1
+  save 300 10
+  save 60 10000
+
+## Master configuration
+master:
+  count: 1
+  containerPorts:
+    redis: 6379
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: standard
+    accessModes:
+      - ReadWriteOnce
+
+## Replica configuration (used if architecture=replication)
+replica:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+  persistence:
+    enabled: true
+    size: 1Gi
 
 ## Service configuration
 service:
   type: ClusterIP
-  port: 80
+  ports:
+    redis: 6379
 
-## Resource limits and requests
-resources:
-  limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
-    cpu: 250m
-    memory: 256Mi
+## Security context
+securityContext:
+  enabled: true
+  runAsUser: 1001
+  fsGroup: 1001
 
-## Persistence configuration
-persistence:
+## Network policy
+networkPolicy:
   enabled: false
-  size: 1Gi
 
-## Liveness and readiness probes
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 120
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 6
-  successThreshold: 1
-
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 3
-  successThreshold: 1
+## Metrics (Prometheus exporter)
+metrics:
+  enabled: false
+  service:
+    type: ClusterIP
+    ports:
+      metrics: 9121
