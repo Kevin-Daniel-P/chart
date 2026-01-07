@@ -1,0 +1,13 @@
+# Default values for Redis
+commonLabels:
+  app.kubernetes.io/managed-by: argocd
+  environment: dev
+
+commonAnnotations:
+  team: platform
+
+metrics:
+  enabled: false
+
+networkPolicy:
+  enabled: false
