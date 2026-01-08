@@ -1,88 +1,25 @@
-## Global settings
-global:
-  redis:
-    password: "redis-password"
-
-## Image configuration
-image:
-  registry: docker.io
-  repository: bitnami/redis
-  tag: 7.2.4
-  pullPolicy: IfNotPresent
-
-## Architecture: standalone or replication
+## Architecture
 architecture: standalone
-# architecture: replication
 
 ## Authentication
 auth:
   enabled: true
   password: "redis-password"
-  # existingSecret: redis-secret
-  # existingSecretPasswordKey: redis-password
-
-## Redis common configuration
-commonConfiguration: |-
-  maxmemory 256mb
-  maxmemory-policy allkeys-lru
-  appendonly yes
-  save 900 1
-  save 300 10
-  save 60 10000
 
 ## Master configuration
 master:
-  count: 1
-  containerPorts:
-    redis: 6379
   resources:
     requests:
       cpu: "100m"
-      memory: "128Mi"
+      memory: "256Mi"
     limits:
       cpu: "500m"
-      memory: "256Mi"
+      memory: "512Mi"
   persistence:
     enabled: false
-    size: 1Gi
-    storageClass: standard
-    accessModes:
-      - ReadWriteOnce
 
-## Replica configuration (used if architecture=replication)
-replica:
-  replicaCount: 2
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "128Mi"
-    limits:
-      cpu: "500m"
-      memory: "256Mi"
-  persistence:
-    enabled: false
-    size: 1Gi
-
-## Service configuration
+## Service
 service:
   type: ClusterIP
   ports:
     redis: 6379
-
-## Security context
-securityContext:
-  enabled: false
-  runAsUser: 1001
-  fsGroup: 1001
-
-## Network policy
-networkPolicy:
-  enabled: false
-
-## Metrics (Prometheus exporter)
-metrics:
-  enabled: false
-  service:
-    type: ClusterIP
-    ports:
-      metrics: 9121
