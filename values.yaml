@@ -71,7 +71,7 @@ service:
 
 ## Security context
 securityContext:
-  enabled: true
+  enabled: false
   runAsUser: 1001
   fsGroup: 1001
 
