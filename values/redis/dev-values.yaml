@@ -18,3 +18,11 @@ master:
 
 replica:
   replicaCount: 0
+
+master:
+  persistence:
+    enabled: false
+
+replica:
+  persistence:
+    enabled: false
