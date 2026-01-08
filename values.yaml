@@ -43,7 +43,7 @@ master:
       cpu: "500m"
       memory: "256Mi"
   persistence:
-    enabled: true
+    enabled: false
     size: 1Gi
     storageClass: standard
     accessModes:
@@ -60,7 +60,7 @@ replica:
       cpu: "500m"
       memory: "256Mi"
   persistence:
-    enabled: true
+    enabled: false
     size: 1Gi
 
 ## Service configuration
