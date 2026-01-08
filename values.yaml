@@ -1,11 +1,6 @@
 ## Architecture
 architecture: standalone
 
-## Authentication
-auth:
-  enabled: true
-  password: "redis-password"
-
 ## Master configuration
 master:
   resources:
