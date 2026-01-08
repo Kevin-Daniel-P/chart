@@ -1,20 +1,26 @@
-## Architecture
+# Redis Helm values for Repository 1
+# Chart: bitnami/redis:20.1.0
+
+# Architecture: standalone (simpler for testing)
 architecture: standalone
 
-## Master configuration
+# Authentication
+auth:
+  enabled: true
+  password: "redis123"
+
+# Master configuration
 master:
+  persistence:
+    enabled: false  # Disable persistence for simplicity
   resources:
     requests:
+      memory: "128Mi"
       cpu: "100m"
-      memory: "256Mi"
     limits:
-      cpu: "500m"
-      memory: "512Mi"
-  persistence:
-    enabled: false
+      memory: "256Mi"
+      cpu: "200m"
 
-## Service
-service:
-  type: ClusterIP
-  ports:
-    redis: 6379
+# Metrics (optional)
+metrics:
+  enabled: false
